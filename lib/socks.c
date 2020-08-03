@@ -928,9 +928,26 @@ CURLproxycode Curl_SOCKS5(const char *proxy_user,
       return CURLPX_BAD_VERSION;
     }
     else if(socksreq[1] != 0) { /* Anything besides 0 is an error */
+      CURLproxycode rc = CURLPX_REPLY_UNASSIGNED;
+      int code = socksreq[1];
       failf(data, "Can't complete SOCKS5 connection to %s. (%d)",
             hostname, (unsigned char)socksreq[1]);
-      return CURLPX_HANDSHAKE_ERROR;
+      if(code < 9) {
+        /* RFC 1928 section 6 lists: */
+        static const CURLproxycode lookup[] = {
+          CURLPX_OK,
+          CURLPX_REPLY_GENERAL_SERVER_FAILURE,
+          CURLPX_REPLY_NOT_ALLOWED,
+          CURLPX_REPLY_NETWORK_UNREACHABLE,
+          CURLPX_REPLY_HOST_UNREACHABLE,
+          CURLPX_REPLY_CONNECTION_REFUSED,
+          CURLPX_REPLY_TTL_EXPIRED,
+          CURLPX_REPLY_COMMAND_NOT_SUPPORTED,
+          CURLPX_REPLY_ADDRESS_TYPE_NOT_SUPPORTED,
+        };
+        rc = lookup[code];
+      }
+      return rc;
     }
 
     /* Fix: in general, returned BND.ADDR is variable length parameter by RFC

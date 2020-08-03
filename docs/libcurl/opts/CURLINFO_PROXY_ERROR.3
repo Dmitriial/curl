@@ -20,10 +20,11 @@
 .\" *
 .\" **************************************************************************
 .\"
-.TH CURLINFO_PROXY_ERROR 3 "3 Aug 2020" "libcurl 7.74.0" "curl_easy_getinfo options"
+.TH CURLINFO_PROXY_ERROR 3 "3 Aug 2020" "libcurl 7.73.0" "curl_easy_getinfo options"
 .SH NAME
 CURLINFO_PROXY_ERROR \- get the detailed (SOCKS) proxy error
 .SH SYNOPSIS
+.nf
 #include <curl/curl.h>
 
 typedef enum {
@@ -34,17 +35,25 @@ typedef enum {
   CURLPX_GSSAPI,
   CURLPX_GSSAPI_PERMSG,
   CURLPX_GSSAPI_PROTECTION,
-  CURLPX_HANDSHAKE_ERROR,
   CURLPX_IDENTD,
   CURLPX_IDENTD_DIFFER,
   CURLPX_LONG_HOSTNAME,
   CURLPX_LONG_PASSWD,
   CURLPX_LONG_USER,
   CURLPX_NO_AUTH,
+  CURLPX_RECV_ADDRESS,
   CURLPX_RECV_AUTH,
   CURLPX_RECV_CONNECT,
-  CURLPX_RECV_ADDRESS,
   CURLPX_RECV_REQACK,
+  CURLPX_REPLY_ADDRESS_TYPE_NOT_SUPPORTED,
+  CURLPX_REPLY_COMMAND_NOT_SUPPORTED,
+  CURLPX_REPLY_CONNECTION_REFUSED,
+  CURLPX_REPLY_GENERAL_SERVER_FAILURE,
+  CURLPX_REPLY_HOST_UNREACHABLE,
+  CURLPX_REPLY_NETWORK_UNREACHABLE,
+  CURLPX_REPLY_NOT_ALLOWED,
+  CURLPX_REPLY_TTL_EXPIRED,
+  CURLPX_REPLY_UNASSIGNED,
   CURLPX_REQUEST_FAILED,
   CURLPX_RESOLVE_HOST,
   CURLPX_SEND_AUTH,
@@ -56,14 +65,16 @@ typedef enum {
   CURLPX_LAST /* never use */
 } CURLproxycode;
 
-CURLcode curl_easy_getinfo(CURL *handle, CURLINFO_PROXY_ERROR, long *p);
+CURLcode curl_easy_getinfo(CURL *handle, CURLINFO_PROXY_ERROR, long *detail);
+.fi
 .SH DESCRIPTION
 Pass a pointer to a long to receive a detailed error code when the most recent
 transfer returned a CURLE_PROXY error.
 
 The return value will match the CURLproxycode set.
 
-The returned value will be zero if no such response code was available.
+The returned value will be zero (equal to CURLPX_OK) if no such response code
+was available.
 .SH PROTOCOLS
 All that can be done over SOCKS
 .SH EXAMPLE

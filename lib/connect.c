@@ -746,9 +746,8 @@ static CURLcode connect_SOCKS(struct connectdata *conn, int sockindex,
                               bool *done)
 {
   CURLcode result = CURLE_OK;
-  CURLproxycode pxresult = CURLPX_OK;
-
 #ifndef CURL_DISABLE_PROXY
+  CURLproxycode pxresult = CURLPX_OK;
   if(conn->bits.socksproxy) {
     /* for the secondary socket (FTP), use the "connect to host"
      * but ignore the "connect to port" (use the secondary port)
